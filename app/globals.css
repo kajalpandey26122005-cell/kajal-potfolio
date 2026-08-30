@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-term-green: var(--term-green);
+  --color-term-cyan: var(--term-cyan);
+  --color-term-purple: var(--term-purple);
+  --color-term-amber: var(--term-amber);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  color-scheme: dark;
+  /* near-black background with subtle blue depth */
+  --background: oklch(0.16 0.012 250);
+  --foreground: oklch(0.93 0.006 250);
+
+  --card: oklch(0.2 0.014 250);
+  --card-foreground: oklch(0.93 0.006 250);
+  --popover: oklch(0.18 0.014 250);
+  --popover-foreground: oklch(0.93 0.006 250);
+
+  /* terminal green as primary accent */
+  --primary: oklch(0.82 0.18 150);
+  --primary-foreground: oklch(0.16 0.012 250);
+
+  --secondary: oklch(0.24 0.016 250);
+  --secondary-foreground: oklch(0.93 0.006 250);
+  --muted: oklch(0.24 0.016 250);
+  --muted-foreground: oklch(0.66 0.02 250);
+  --accent: oklch(0.26 0.02 250);
+  --accent-foreground: oklch(0.93 0.006 250);
+
+  --destructive: oklch(0.62 0.2 25);
+  --border: oklch(0.34 0.02 250 / 60%);
+  --input: oklch(0.34 0.02 250 / 60%);
+  --ring: oklch(0.82 0.18 150 / 50%);
+
+  --term-green: oklch(0.85 0.19 150);
+  --term-cyan: oklch(0.82 0.13 210);
+  --term-purple: oklch(0.7 0.14 290);
+  --term-amber: oklch(0.85 0.14 85);
+
+  --radius: 0.625rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  ::selection {
+    background: oklch(0.85 0.19 150 / 30%);
+    color: var(--foreground);
+  }
+}
+
+@layer utilities {
+  /* subtle dark grid + radial glow background */
+  .os-backdrop {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(circle at 15% 0%, oklch(0.82 0.18 150 / 0.07), transparent 45%),
+      radial-gradient(circle at 85% 20%, oklch(0.82 0.13 210 / 0.06), transparent 45%),
+      radial-gradient(circle at 50% 100%, oklch(0.7 0.14 290 / 0.05), transparent 55%),
+      linear-gradient(to right, oklch(1 0 0 / 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(1 0 0 / 0.025) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 44px 44px, 44px 44px;
+  }
+
+  .glass {
+    background: oklch(0.2 0.014 250 / 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 0 1px oklch(0.85 0.19 150 / 0.15), 0 8px 40px -12px oklch(0.85 0.19 150 / 0.25);
+  }
+
+  .text-glow-green {
+    text-shadow: 0 0 18px oklch(0.85 0.19 150 / 0.45);
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 18px oklch(0.82 0.13 210 / 0.45);
+  }
+
+  /* blinking terminal cursor */
+  .cursor-blink::after {
+    content: '';
+    display: inline-block;
+    width: 0.55ch;
+    height: 1.05em;
+    margin-left: 0.15ch;
+    background: var(--term-green);
+    vertical-align: text-bottom;
+    animation: cursor-blink 1.05s steps(2, start) infinite;
+  }
+
+  @keyframes cursor-blink {
+    to {
+      visibility: hidden;
+    }
+  }
+
+  /* scanline sweep for terminal windows */
+  .scanline {
+    position: relative;
+    overflow: hidden;
+  }
+  .scanline::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      oklch(0.85 0.19 150 / 0.05) 50%,
+      transparent 100%
+    );
+    height: 30%;
+    animation: scan 7s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+  @keyframes scan {
+    0% {
+      transform: translateY(-120%);
+    }
+    100% {
+      transform: translateY(430%);
+    }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+  .pulse-dot {
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+
+  @keyframes flow-dash {
+    to {
+      stroke-dashoffset: -16;
+    }
+  }
+  .flow-line {
+    stroke-dasharray: 4 4;
+    animation: flow-dash 0.8s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
