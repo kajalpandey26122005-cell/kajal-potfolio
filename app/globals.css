@@ -80,13 +80,39 @@
   }
   html {
     scroll-behavior: smooth;
+    /* offset anchor targets so they don't hide under the fixed nav */
+    scroll-padding-top: 5.5rem;
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: 'ss01', 'cv01';
   }
   ::selection {
     background: oklch(0.85 0.19 150 / 30%);
     color: var(--foreground);
+  }
+
+  /* refined custom scrollbar for a premium feel */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.5 0.06 250 / 0.5) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.4 0.04 250 / 0.6);
+    border: 3px solid transparent;
+    border-radius: 9999px;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.6 0.1 155 / 0.7);
+    background-clip: padding-box;
   }
 }
 
